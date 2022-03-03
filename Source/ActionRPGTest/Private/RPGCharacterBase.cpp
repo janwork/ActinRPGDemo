@@ -192,6 +192,33 @@ void ARPGCharacterBase::RemoveSlottedGameplayAbilities(bool bRemoveAll)
 	}
 }
 
+void ARPGCharacterBase::HandleDamage(float DamageAmount, const FHitResult& HitInfo, const struct FGameplayTagContainer& DamageTags, ARPGCharacterBase* InstigatorCharacter, AActor* DamageCauser)
+{
+	OnDamaged(DamageAmount, HitInfo, DamageTags, InstigatorCharacter, DamageCauser);
+}
+
+void ARPGCharacterBase::HandleHealthChanged(float DeltaValue, const struct FGameplayTagContainer& EventTags)
+{
+	if (bAbilitiesInitialized) {
+		OnHealthChanged(DeltaValue, EventTags);
+	}
+}
+
+void ARPGCharacterBase::HandleManaChanged(float DeltaValue, const struct FGameplayTagContainer& EventTags)
+{
+	if (bAbilitiesInitialized)
+	{
+		OnManaChanged(DeltaValue, EventTags);
+	}
+}
+
+void ARPGCharacterBase::HandleMoveSpeedChanged(float DeltaValue, const struct FGameplayTagContainer& EventTags)
+{
+	if (bAbilitiesInitialized) {
+		OnMoveSpeedChanged(DeltaValue, EventTags);
+	}
+}
+
 void ARPGCharacterBase::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
@@ -384,5 +411,13 @@ bool ARPGCharacterBase::GetCooldownRemainingForTag(FGameplayTagContainer Cooldow
 	}
 
 	return false;
+}
+
+FGenericTeamId ARPGCharacterBase::GetGenericTeamId() const
+{
+	static const FGenericTeamId PlayerTeam(0);
+	static const FGenericTeamId AITeam(1);
+	//return Cast<APlayerController>(GetController()) ? PlayerTeam : AITeam;
+	return AITeam;
 }
 

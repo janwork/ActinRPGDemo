@@ -14,6 +14,7 @@ public class ActionRPGTest : ModuleRules
 			"GameplayAbilities",
             "GameplayTags",
             "GameplayTasks",
+			"AIModule",
 			"ActionRPGLoadingScreen"
 		});
 	}

@@ -3,20 +3,23 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Character.h"
+#include "../ActionRPGTest.h"
 #include "RPGTypes.h"
+#include "GameFramework/Character.h"
+#include "UObject/ScriptInterface.h"
 #include "AbilitySystemInterface.h"
 #include "RPGInventoryInterface.h"
-#include "UObject/ScriptInterface.h"
 #include "Abilities/RPGAbilitySystemComponent.h"
 #include "Abilities/RPGAttributeSet.h"
+#include "GenericTeamAgentInterface.h"
 #include "RPGCharacterBase.generated.h"
+
 
 class URPGGameplayAbility;// ÌáÇ°ÉùÃ÷
 class UGameplayEffect;
 
 UCLASS()
-class ACTIONRPGTEST_API ARPGCharacterBase : public ACharacter, public IAbilitySystemInterface
+class ACTIONRPGTEST_API ARPGCharacterBase : public ACharacter, public IAbilitySystemInterface, public IGenericTeamAgentInterface
 {
 	GENERATED_BODY()
 
@@ -27,7 +30,6 @@ public:
 public:
 	// Called when the game starts or when spawned
 	//virtual void BeginPlay() override;
-
 	virtual void PossessedBy(AController* NewController) override;
 	virtual void UnPossessed() override;
 	virtual void OnRep_Controller() override;
@@ -130,4 +132,20 @@ protected:
 
 	friend URPGAttributeSet;
 
+	UFUNCTION(BlueprintImplementableEvent)
+		void OnDamaged(float DamageAmount, const FHitResult& HitInfo, const struct FGameplayTagContainer& DamageTags, ARPGCharacterBase* InstigatorCharacter, AActor* DamageCauser);
+
+	UFUNCTION(BlueprintImplementableEvent)
+		void OnHealthChanged(float DeltaValue, const struct  FGameplayTagContainer& EventTags);
+
+	UFUNCTION(BlueprintImplementableEvent)
+		void OnManaChanged(float DeltaValue, const struct  FGameplayTagContainer& EventTags);
+
+	virtual void  HandleDamage(float DamageAmount, const FHitResult& HitInfo, const struct FGameplayTagContainer& DamageTags, ARPGCharacterBase* InstigatorCharacter, AActor* DamageCauser);
+	virtual void  HandleHealthChanged(float DeltaValue, const struct  FGameplayTagContainer& EventTags);
+	virtual void  HandleManaChanged(float DeltaValue, const struct  FGameplayTagContainer& EventTags);
+	virtual void  HandleMoveSpeedChanged(float DeltaValue, const struct  FGameplayTagContainer& EventTags);
+
+	
+	virtual FGenericTeamId GetGenericTeamId() const override;
 };
